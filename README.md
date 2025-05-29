@@ -4,11 +4,27 @@
 
 AWS S3, AWS CloudFront, GitHub Action로 서비스 배포 파이프라인을 구성하는 테스트 레포지토리입니다.
 
+## 목차
+
+[주요 과정](#주요-과정)
+
+[0. Next.js 프로젝트 구성](#0-nextjs-프로젝트-구성)
+
+[1. AWS S3 구성](#1-aws-s3-구성)
+
+[2. AWS CloudFront 구성](#2-aws-cloudfront-구성)
+
+[3. AWS IAM 구성](#3-aws-iam-구성)
+
+[4. GitHub Actions 구성](#4-github-actions-구성)
+
+[주요 링크](#주요-링크)
+
 ## 주요 과정
 
 ### 0. Next.js 프로젝트 구성
 
-🔨 실습
+**🔨 실습**
 
 1. 빌드 결과로 정적 파일들이 생성될 수 있게, `next.config.ts`에서 output 옵션을 `export`로 설정합니다.
 
@@ -44,7 +60,7 @@ export default nextConfig;
 
 AWS S3는 Simple Storage Service의 약자로, 확장 가능한 클라우드 스토리지 서비스를 의미합니다. 정적 파일을 호스팅하고 배포하는 데 사용됩니다. AWS S3에서 데이터를 저장하는 기본 컨테이너를 Bucket(버킷)이라고 합니다. HTML, CSS, JavaScript 파일과 같은 정적 자산을 저장할 수 있습니다. 각 버킷은 고유한 이름을 가지며, 정적 웹사이트 호스팅 기능을 활성화할 수 있습니다.
 
-🔨 실습
+**🔨 실습**
 
 ❗️ AWS console 계정이 없다면, root 계정으로 회원가입합니다. 정보 유출로 인한 비용 문제 등을 방지하려면, [MFA](https://docs.aws.amazon.com/IAM/latest/UserGuide/enable-mfa-for-root.html)도 반드시 설정해야 합니다. ❗️
 
@@ -70,7 +86,7 @@ CDN(Content Delivery Network)은 지리적으로 분산된 서버 네트워크�
 
 캐시 무효화(Cache Invalidation)는 저장된 기존 콘텐츠를 강제로 삭제하여 새로운 콘텐츠로 업데이트하는 과정입니다. 웹사이트를 배포할 때 기존 캐시된 파일들이 남아있으면 사용자들이 이전 버전의 콘텐츠를 보게 될 수 있습니다. 따라서 새로운 배포 후에는 캐시 무효화를 실행하여 모든 사용자가 최신 버전의 콘텐츠를 받을 수 있도록 해야 합니다. CloudFront에서는 특정 경로나 전체 콘텐츠에 대해 무효화를 수행할 수 있습니다.
 
-🔨 실습
+**🔨 실습**
 
 1. CloudFront에서 `배포 생성` 버튼을 눌러 이전 단계의 S3를 지정합니다.
 2. '일반' 메뉴의 '배포 도메인 이름'으로 접속하여 확인합니다. 시간이 걸릴 수 있으니, 바로 보이지 않는다면 잠시 기다립니다.
@@ -79,7 +95,7 @@ CDN(Content Delivery Network)은 지리적으로 분산된 서버 네트워크�
 
 AWS IAM(Identity and Access Management)은 AWS 리소스에 대한 접근을 안전하게 제어하는 서비스입니다. GitHub Actions에서 AWS 서비스에 접근하기 위해서는 적절한 권한을 가진 IAM 사용자나 역할을 생성해야 합니다. S3 버킷에 파일을 업로드하고, CloudFront 배포를 무효화할 수 있는 최소한의 권한만을 부여하여 보안을 강화합니다.
 
-🔨 실습
+**🔨 실습**
 
 1. 새 '정책'을 만듭니다. 파이프라인 구성에 필요한 CloudFront, S3 관련 권한만 허용합니다.
 2. 새 '사용자'를 만듭니다.
@@ -97,7 +113,7 @@ GitHub Actions는 GitHub에서 제공하는 CI/CD(Continuous Integration/Continu
 
 GitHub Repository Secrets는 민감한 정보(API 키, 패스워드, 토큰 등)를 안전하게 저장하고 GitHub Actions 워크플로우에서 사용할 수 있게 해주는 기능입니다. 이러한 값들은 암호화되어 저장되며, 워크플로우 실행 중에만 접근 가능합니다. AWS 자격 증명, S3 버킷 이름, CloudFront 배포 ID 등을 secrets로 저장하여 코드에 하드코딩하지 않고도 안전하게 사용할 수 있습니다. 환경변수로 설정하여 ${{ secrets.SECRET_NAME }} 형태로 워크플로우에서 참조할 수 있습니다.
 
-🔨 실습
+**🔨 실습**
 
 1. secrets 추가
    'Settings' - 'Secrets and variables' - 'Actions'에서, `New repository secret` 버튼을 클릭해 다음 secrets를 추가합니다.
